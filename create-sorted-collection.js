@@ -12,12 +12,12 @@ var _ = {
 function createSortedCollection (opts) {
     function SortedCollection () {
         return struct({
+            sortBy: observ(opts.sortBy),
             sorted: observ([]),
             indexed: struct({})
         })
     }
     SortedCollection._indexBy = opts.indexBy
-    SortedCollection._sortBy = opts.sortBy
 
     Object.keys(sortedCollectionFns).forEach(function (k) {
         SortedCollection[k] = sortedCollectionFns[k]
@@ -30,13 +30,14 @@ var sortedCollectionFns = {
     // data is an array
     get: function (state, data) {
         var self = this
-        var newList = _.sortBy(data, this._sortBy)
+        var newList = _.sortBy(data, state().sortBy)
         var newData = data.reduce(function (acc, item) {
             acc[item[self._indexBy]] = item
             return acc
         }, {})
 
         state.set({
+            sortBy: state().sortBy,
             sorted: newList,
             indexed: newData
         })
@@ -49,7 +50,7 @@ var sortedCollectionFns = {
             return _item[self._indexBy] === item[self._indexBy]
         })
 
-        var reSort = !!item[self._sortBy]
+        var reSort = !!item[state().sortBy]
 
         var oldItem = state().indexed[item[self._indexBy]]
         var newItem = xtend(oldItem, item)
@@ -61,17 +62,18 @@ var sortedCollectionFns = {
             .concat(arr.slice(i + 1, arr.length))
 
         var newList = reSort ?
-            _.sortBy(_newList, self._sortBy) :
+            _.sortBy(_newList, state().sortBy) :
             _newList
 
         state.set({
+            sortBy: state().sortBy,
             sorted: newList,
             indexed: xtend(state().indexed, newIndexedState)
         })
     },
 
     add: function (state, item) {
-        var i = _.sortedIndexBy(state().sorted, item, this._sortBy)
+        var i = _.sortedIndexBy(state().sorted, item, state().sortBy)
         var newList = state().sorted.slice(0, i).concat([item])
             .concat(state().sorted.slice(i, state().sorted.length))
 
@@ -79,6 +81,7 @@ var sortedCollectionFns = {
         newData[item[this._indexBy]] = item
 
         state.set({
+            sortBy: state().sortBy,
             sorted: newList,
             indexed: xtend(state().indexed, newData)
         })
@@ -96,6 +99,7 @@ var sortedCollectionFns = {
         delete newData[item[self._indexBy]]
 
         state.set({
+            sortBy: state().sortBy,
             sorted: newList,
             indexed: newData
         })

@@ -9,6 +9,7 @@ test('sorted collection', function (t) {
 
     var state = MyCollection()
     t.deepEqual(state(), {
+        sortBy: 'hello',
         sorted: [],
         indexed: {}
     }, 'should return initial state')
@@ -18,6 +19,7 @@ test('sorted collection', function (t) {
         { hello: 'a', id: 1 }
     ])
     t.deepEqual(state(), {
+        sortBy: 'hello',
         sorted: [
             { hello: 'a', id: 1 },
             { hello: 'b', id: 2 }
@@ -30,6 +32,7 @@ test('sorted collection', function (t) {
 
     MyCollection.edit(state, { id: 1, hello: 'world' })
     t.deepEqual(state(), {
+        sortBy: 'hello',
         sorted: [
             { hello: 'b', id: 2 },
             { hello: 'world', id: 1 }
@@ -42,6 +45,7 @@ test('sorted collection', function (t) {
 
     MyCollection.add(state, { id: 3, hello: 'foo' })
     t.deepEqual(state(), {
+        sortBy: 'hello',
         sorted: [
             { hello: 'b', id: 2 },
             { hello: 'foo', id: 3 },
@@ -56,6 +60,7 @@ test('sorted collection', function (t) {
 
     MyCollection.delete(state, { id: 3 })
     t.deepEqual(state(), {
+        sortBy: 'hello',
         sorted: [
             { hello: 'b', id: 2 },
             { hello: 'world', id: 1 }
