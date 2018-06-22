@@ -1,5 +1,5 @@
 var test = require('tape')
-var createSortedCollection = require('../create-sorted-collection')
+var createSortedCollection = require('../sorted-collection')
 
 test('sorted collection', function (t) {
     var MyCollection = createSortedCollection({
