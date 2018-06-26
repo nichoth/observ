@@ -2,7 +2,7 @@ var xtend = require('xtend')
 var struct = require('observ-struct')
 var observ = require('observ')
 var _ = {
-    sortBy: require('lodash.sortby'),
+    orderBy: require('lodash.orderby'),
     findIndex: require('@f/find-index'),
     sortedIndexBy: require('lodash.sortedindexby')
 }
@@ -12,6 +12,7 @@ var _ = {
 function createSortedCollection (opts) {
     function SortedCollection () {
         return struct({
+            order: observ(opts.order || 'asc'),
             sortBy: observ(opts.sortBy),
             sorted: observ([]),
             indexed: struct({})
@@ -30,13 +31,14 @@ var sortedCollectionFns = {
     // data is an array
     get: function (state, data) {
         var self = this
-        var newList = _.sortBy(data, state().sortBy)
+        var newList = _.orderBy(data, state().sortBy, state().order)
         var newData = data.reduce(function (acc, item) {
             acc[item[self._indexBy]] = item
             return acc
         }, {})
 
         state.set({
+            order: state().order,
             sortBy: state().sortBy,
             sorted: newList,
             indexed: newData
@@ -62,10 +64,11 @@ var sortedCollectionFns = {
             .concat(arr.slice(i + 1, arr.length))
 
         var newList = reSort ?
-            _.sortBy(_newList, state().sortBy) :
+            _.orderBy(_newList, state().sortBy, state().order) :
             _newList
 
         state.set({
+            order: state().order,
             sortBy: state().sortBy,
             sorted: newList,
             indexed: xtend(state().indexed, newIndexedState)
@@ -81,6 +84,7 @@ var sortedCollectionFns = {
         newData[item[this._indexBy]] = item
 
         state.set({
+            order: state().order,
             sortBy: state().sortBy,
             sorted: newList,
             indexed: xtend(state().indexed, newData)
@@ -99,6 +103,7 @@ var sortedCollectionFns = {
         delete newData[item[self._indexBy]]
 
         state.set({
+            order: state().order,
             sortBy: state().sortBy,
             sorted: newList,
             indexed: newData

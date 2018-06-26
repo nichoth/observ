@@ -10,6 +10,7 @@ var state
 test('create state', function (t) {
     state = MyCollection()
     t.deepEqual(state(), {
+        order: 'asc',
         sortBy: 'hello',
         sorted: [],
         indexed: {}
@@ -23,6 +24,7 @@ test('.get', function (t) {
         { hello: 'a', id: 1 }
     ])
     t.deepEqual(state(), {
+        order: 'asc',
         sortBy: 'hello',
         sorted: [
             { hello: 'a', id: 1 },
@@ -37,11 +39,40 @@ test('.get', function (t) {
     t.end()
 })
 
+test('sort descending', function (t) {
+    var MyCollection = createSortedCollection({
+        order: 'desc',
+        sortBy: 'hello',
+        indexBy: 'id'
+    })
+    var state = MyCollection()
+
+    MyCollection.get(state, [
+        { hello: 'b', id: 2 },
+        { hello: 'a', id: 1 }
+    ])
+
+    t.deepEqual(state(), {
+        order: 'desc',
+        sortBy: 'hello',
+        sorted: [
+            { hello: 'b', id: 2 },
+            { hello: 'a', id: 1 }
+        ],
+        indexed: {
+            '1': { hello: 'a', id: 1 },
+            '2': { hello: 'b', id: 2 }
+        }
+    }, 'should set state sorted descending')
+
+    t.end()
+})
 
 test('.edit', function (t) {
     MyCollection.edit(state, { id: 1, hello: 'world' })
 
     t.deepEqual(state(), {
+        order: 'asc',
         sortBy: 'hello',
         sorted: [
             { hello: 'b', id: 2 },
@@ -58,7 +89,9 @@ test('.edit', function (t) {
 
 test('.add', function (t) {
     MyCollection.add(state, { id: 3, hello: 'foo' })
+
     t.deepEqual(state(), {
+        order: 'asc',
         sortBy: 'hello',
         sorted: [
             { hello: 'b', id: 2 },
@@ -79,6 +112,7 @@ test('.delete', function (t) {
     MyCollection.delete(state, { id: 3 })
 
     t.deepEqual(state(), {
+        order: 'asc',
         sortBy: 'hello',
         sorted: [
             { hello: 'b', id: 2 },
