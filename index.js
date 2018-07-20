@@ -3,12 +3,14 @@ var struct = require('observ-struct')
 var from = require('./from')
 var SortedCollection = require('./sorted-collection')
 var Requests = require('./requests')
+var Model = require('./model')
 
 module.exports = {
     observ: observ,
     struct: struct,
     from: from,
     SortedCollection: SortedCollection,
-    Requests: Requests
+    Requests: Requests,
+    Model: Model
 }
 
