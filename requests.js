@@ -12,6 +12,7 @@ function Requests () {
 
 Requests.error = function (state, err) {
     state.error.set(err)
+    state.isResolving.set(false)
 }
 
 Requests.start = function (state, req) {
