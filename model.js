@@ -36,7 +36,7 @@ function Model (_opts) {
 
     var syncUpdateFns = Object.keys(opts.update).reduce(function (acc, k) {
         if (!opts.io[k]) acc[k] = function (arg) {
-            opts.update[k](state.data, arg)
+            opts.update[k](state.data, arg, { modelState: state })
         }
         return acc
     }, {})
