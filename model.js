@@ -34,6 +34,13 @@ function Model (_opts) {
         requests: Requests()
     })
 
+    var syncUpdateFns = Object.keys(opts.update).reduce(function (acc, k) {
+        if (!opts.io[k]) acc[k] = function (arg) {
+            update[k](state.data, arg)
+        }
+        return acc
+    }, {})
+
     var ioWithUpdates = Object.keys(opts.io).reduce(function (acc, k) {
         acc[k] = function (arg, cb) {
             cb = cb || noop
@@ -86,7 +93,7 @@ function Model (_opts) {
     return xtend({
         _state: state,
         _update: opts.update
-    }, ioWithUpdates)
+    }, syncUpdateFns, ioWithUpdates)
 }
 
 Model.getState = function (model) {
