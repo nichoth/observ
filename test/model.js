@@ -109,7 +109,7 @@ test('parse responses', function (t) {
 })
 
 test('update functions', function (t) {
-    t.plan(2)
+    t.plan(3)
 
     var model = Model({
         state: state,
@@ -124,10 +124,15 @@ test('update functions', function (t) {
 
             bar: function (state, res) {
                 state.hello.set(res + 'bar')
+            },
+
+            baz: function (state, data) {
+                t.equal(data, 'test', 'should expose sync update functions')
             }
         }
     })
 
     model.foo('ok')
+    model.baz('test')
 })
 
