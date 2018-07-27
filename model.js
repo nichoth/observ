@@ -53,20 +53,11 @@ function Model (_opts) {
             Requests.start(state.requests, _req)
             opts.io[k](arg, function (err, res) {
                 if (err) {
-                    var msg
-                    try {
-                        msg = err.body.errors.message
-                    } catch (_err) {
-                        msg = err.statusMessage ?
-                            err.statusMessage :
-                            'Network error'
-                    }
-
                     Requests.error(state.requests, {
                         req: _req.req,
                         type: k,
                         id: _req.id,
-                        error: new Error(msg)
+                        error: err.message
                     })
 
                     return cb(err)
