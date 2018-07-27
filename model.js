@@ -57,7 +57,7 @@ function Model (_opts) {
                         req: _req.req,
                         type: k,
                         id: _req.id,
-                        error: err.message
+                        error: err
                     })
 
                     return cb(err)
