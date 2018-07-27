@@ -15,6 +15,10 @@ Requests.error = function (state, err) {
     state.isResolving.set(false)
 }
 
+Requests.clearError = function (state) {
+    state.error.set(null)
+}
+
 Requests.start = function (state, req) {
     var newReq = {}
     newReq[req.id] = req
