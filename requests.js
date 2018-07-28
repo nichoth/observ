@@ -11,8 +11,8 @@ function Requests () {
 }
 
 Requests.error = function (state, err) {
+    Requests.resolve(state, err)
     state.error.set(err)
-    state.isResolving.set(false)
 }
 
 Requests.clearError = function (state) {
