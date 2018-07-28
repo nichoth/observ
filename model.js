@@ -28,15 +28,14 @@ function Model (_opts) {
             'update.' + k)
     })
 
-    var state = struct({
-        data: opts.state,
+    var state = struct(xtend(opts.state, {
         hasFetched: observ(false),
         requests: Requests()
-    })
+    }))
 
     var syncUpdateFns = Object.keys(opts.update).reduce(function (acc, k) {
         if (!opts.io[k]) acc[k] = function (arg) {
-            opts.update[k](state.data, arg, { modelState: state })
+            opts.update[k](state, arg)
         }
         return acc
     }, {})
@@ -69,9 +68,8 @@ function Model (_opts) {
                     opts.parse[k](res) :
                     res
 
-                opts.update[k](state.data, parsedResponse, {
+                opts.update[k](state, parsedResponse, {
                     req: _req,
-                    modelState: state
                 })
 
                 cb(null, res)

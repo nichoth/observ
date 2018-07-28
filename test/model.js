@@ -18,9 +18,9 @@ var echos = {
     }
 }
 
-var state = struct({
+var state = {
     hello: observ('world')
-})
+}
 
 var model
 
@@ -74,7 +74,7 @@ test('methods', function (t) {
         })
         t.ok(wasResolving !== -1)
         t.equal(_state().requests.isResolving, false)
-        t.equal(_state().data.hello, 'woo', 'should have updated state')
+        t.equal(_state().hello, 'woo', 'should have updated state')
         t.end()
     })
 })
@@ -102,14 +102,14 @@ test('parse responses', function (t) {
     })
 
     model.foo('ok', function (err, res) {
-        t.equal(Model.getState(model)().data.hello, 'okfoo',
+        t.equal(Model.getState(model)().hello, 'okfoo',
             'should call update with parsed response')
         t.end()
     })
 })
 
 test('update functions', function (t) {
-    t.plan(3)
+    t.plan(2)
 
     var model = Model({
         state: state,
@@ -117,8 +117,6 @@ test('update functions', function (t) {
         update: {
             foo: function (state, res, opts) {
                 t.ok(opts.req, 'should call update with request arg')
-                t.ok(opts.modelState,
-                    'should call update with full model state')
                 state.hello.set(res)
             },
 
