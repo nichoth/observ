@@ -34,8 +34,9 @@ function Model (_opts) {
     }))
 
     var syncUpdateFns = Object.keys(opts.update).reduce(function (acc, k) {
-        if (!opts.io[k]) acc[k] = function (arg) {
-            opts.update[k](state, arg)
+        if (!opts.io[k]) acc[k] = function () {
+            var _args = [].slice.call(arguments)
+            opts.update[k].apply(opts.update, [state].concat(_args))
         }
         return acc
     }, {})
