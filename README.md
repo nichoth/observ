@@ -168,7 +168,7 @@ console.log(state())
 ```
 
 ## model
-Compose async functions with state changes
+Compose async functions with state changes. This should be a convenient way to model async function call state, so that the application code only deals with update the domain state on successful responses. IO state is modelled with `./requests`.
 
 ```js
 var Model = require('@nichoth/observ/model')
