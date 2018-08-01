@@ -14,8 +14,8 @@ modules
 * observ
 * observ-struct
 * sorted collection
-* indexed collection
 * from -- a utility
+* Model -- compose IO and state changes
 
 ## install
 
@@ -165,5 +165,52 @@ assert.deepEqual(state(), {
     foo: 'bar'
 })
 console.log(state())
+```
+
+## model
+Compose async functions with state changes
+
+```js
+var Model = require('@nichoth/observ/model')
+
+var model = Model({
+    state: {
+        hello: observ('world')
+    },
+    io: {
+        foo: function (data, cb) {
+            // echo
+            process.nextTick(() => cb(null, data))
+        }
+    },
+    update: {
+        // every key in `io` must have a corresponding key under `update`.
+        // these functions are called on any non-error response.
+        // however, you can also include synchronous functions here
+        foo: function (state, res) {
+            state.hello.set(res)
+        }
+    }
+})
+
+var state = Model.getState(model)
+
+// the given state is extended with two keys, `hasFetched` and `requests`
+assert.deepEqual(state(), {
+    hello: 'world',
+    hasFetched: false,
+    requests: {
+        isResolving: false,
+        resolving: {},
+        error: null
+    }
+})
+
+model.foo('ok', function (err, res) {
+    // this is called after the request is done and the state
+    // has been updated
+    assert.equal(res, 'ok')
+    assert.equal(state().hello, 'ok')
+})
 ```
 
