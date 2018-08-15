@@ -1,8 +1,7 @@
 var xtend = require('xtend')
-var obs = require('./')
-var Requests = obs.Requests
-var struct = obs.struct
-var observ = obs.observ
+var Requests = require('./requests')
+var struct = require('./struct')
+var observ = require('./observ')
 var noop = function () {}
 
 var _id = 0

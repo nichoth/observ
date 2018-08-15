@@ -1,5 +1,5 @@
 # observ
-Several building blocks for creating observable application state
+Several building blocks for creating observable application state. This builds off of [observ](https://www.npmjs.com/package/observ) and [observ-struct](https://www.npmjs.com/package/observ-struct), and exposes some additional tools.
 
 -----------------------------------
 
@@ -11,16 +11,24 @@ notes
 
 modules
 
-* observ
-* observ-struct
-* sorted collection
-* from -- a utility
+* observ -- see [observ](https://www.npmjs.com/package/observ)
+* observ-struct -- see [observ-struct](https://www.npmjs.com/package/observ-struct)
+* sorted-collection
+* from -- a utility. Take a plain data structure and make it observable
 * Model -- compose IO and state changes
+* requests -- model request/reply state (this is used by `model.js`)
 
 ## install
 
     npm install @nichoth/observ
 
+## example
+```js
+// require everything at once
+var { Model, struct, observ } = require('@nichoth/observ')
+// import specific files
+var SortedCollection = require('@nichoth/observ/sorted-collection')
+```
 
 ## api
 
