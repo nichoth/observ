@@ -12,6 +12,7 @@ notes
 modules
 
 * observ -- see [observ](https://www.npmjs.com/package/observ)
+* observ/computed
 * observ-struct -- see [observ-struct](https://www.npmjs.com/package/observ-struct)
 * sorted-collection
 * Model -- compose IO and state changes
