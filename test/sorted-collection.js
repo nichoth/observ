@@ -18,6 +18,33 @@ test('create state', function (t) {
     t.end()
 })
 
+test('pass in a function to sort things', function (t) {
+    t.plan(2)
+    var Foos = createSortedCollection({
+        sortBy: function hello (foo) {
+            return foo.hello.toLowerCase()
+        },
+        indexBy: 'id'
+    })
+
+    var state = Foos()
+    Foos.get(state, [
+        { hello: 'b', id: 2 },
+        { hello: 'a', id: 1 },
+        { hello: 'C', id: 3 }
+    ])
+
+    var _state = state()
+    t.equal(_state.sortBy, 'hello',
+        'should use function name as sortBy state')
+
+    t.deepEqual(_state.sorted, [
+        { hello: 'a', id: 1 },
+        { hello: 'b', id: 2 },
+        { hello: 'C', id: 3 }
+    ], 'should use the predicate to sort things')
+})
+
 test('.get', function (t) {
     MyCollection.get(state, [
         { hello: 'b', id: 2 },

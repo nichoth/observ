@@ -10,15 +10,21 @@ var _ = {
 // indexBy
 // sortBy
 function createSortedCollection (opts) {
+    var sortPredicate = typeof opts.sortBy === 'function' ?
+        opts.sortBy :
+        function (x) { return opts.sortBy ? x[opts.sortBy] : x }
+
     function SortedCollection () {
         return struct({
             order: observ(opts.order || 'asc'),
-            sortBy: observ(opts.sortBy),
+            sortBy: observ(typeof opts.sortBy === 'function' ?
+                opts.sortBy.name : opts.sortBy),
             sorted: observ([]),
             indexed: struct({})
         })
     }
     SortedCollection._indexBy = opts.indexBy
+    SortedCollection._predicate = sortPredicate
 
     Object.keys(sortedCollectionFns).forEach(function (k) {
         SortedCollection[k] = sortedCollectionFns[k]
@@ -27,11 +33,14 @@ function createSortedCollection (opts) {
     return SortedCollection
 }
 
+// @TODO this seems bad to use a reference to `this`
+// you could also patch the returned `struct` with some properties for
+// the predicate and indexBy. That might be nicer
 var sortedCollectionFns = {
     // data is an array
     get: function (state, data) {
         var self = this
-        var newList = _.orderBy(data, state().sortBy, state().order)
+        var newList = _.orderBy(data, self._predicate, state().order)
         var newData = data.reduce(function (acc, item) {
             acc[item[self._indexBy]] = item
             return acc
@@ -64,7 +73,7 @@ var sortedCollectionFns = {
             .concat(arr.slice(i + 1, arr.length))
 
         var newList = reSort ?
-            _.orderBy(_newList, state().sortBy, state().order) :
+            _.orderBy(_newList, self._predicate, state().order) :
             _newList
 
         state.set({
