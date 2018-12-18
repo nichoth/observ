@@ -72,6 +72,32 @@ test('.sortBy', function (t) {
     t.equal(state.sortBy(), 'foo')
 })
 
+test('.orderBy', function (t) {
+    t.plan(2)
+
+    var Foos = createSortedCollection({
+        sortBy: function hello (foo) {
+            return foo.hello.toLowerCase()
+        },
+        indexBy: 'id'
+    })
+
+    var state = Foos()
+    Foos.get(state, [
+        { hello: 'b', id: 2 },
+        { hello: 'a', id: 1 },
+        { hello: 'C', id: 3 }
+    ])
+
+    Foos.orderBy(state, 'desc')
+    t.deepEqual([
+        { hello: 'C', id: 3 },
+        { hello: 'b', id: 2 },
+        { hello: 'a', id: 1 }
+    ], state.sorted(), 'should reverse the order')
+    t.equal(state.order(), 'desc')
+})
+
 test('.get', function (t) {
     MyCollection.get(state, [
         { hello: 'b', id: 2 },

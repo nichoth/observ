@@ -16,6 +16,7 @@ function createSortedCollection (opts) {
 
     function SortedCollection () {
         return struct({
+            // asc or desc
             order: observ(opts.order || 'asc'),
             sortBy: observ(typeof opts.sortBy === 'function' ?
                 opts.sortBy.name : opts.sortBy),
@@ -38,6 +39,8 @@ function createSortedCollection (opts) {
 // the predicate and indexBy. That might be nicer
 var sortedCollectionFns = {
     sortBy: function (state, sort) {
+        if (sort === this._predicate) return
+
         var sortPredicate = typeof sort === 'function' ?
             sort :
             function (x) { return sort ? x[sort] : x }
@@ -46,6 +49,13 @@ var sortedCollectionFns = {
         state.sortBy.set(typeof sort === 'function' ?  sort.name : sort)
         var newList = _.orderBy(state.sorted(), sortPredicate,
             state().order)
+        state.sorted.set(newList)
+    },
+
+    orderBy: function (state, order) {
+        if (order === state.order()) return
+        var newList = _.orderBy(state.sorted(), this._predicate, order)
+        state.order.set(order)
         state.sorted.set(newList)
     },
 
