@@ -37,6 +37,18 @@ function createSortedCollection (opts) {
 // you could also patch the returned `struct` with some properties for
 // the predicate and indexBy. That might be nicer
 var sortedCollectionFns = {
+    sortBy: function (state, sort) {
+        var sortPredicate = typeof sort === 'function' ?
+            sort :
+            function (x) { return sort ? x[sort] : x }
+
+        this._predicate = sortPredicate
+        state.sortBy.set(typeof sort === 'function' ?  sort.name : sort)
+        var newList = _.orderBy(state.sorted(), sortPredicate,
+            state().order)
+        state.sorted.set(newList)
+    },
+
     // data is an array
     get: function (state, data) {
         var self = this
