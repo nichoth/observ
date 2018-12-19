@@ -4,7 +4,6 @@ var observ = require('observ')
 var _ = {
     orderBy: require('lodash.orderby'),
     findIndex: require('@f/find-index'),
-    // findLastIndex: require('lodash.findlastindex'),
     sortedIndexBy: require('lodash.sortedindexby'),
     sortedLastIndexBy: require('lodash.sortedlastindexby')
 }
