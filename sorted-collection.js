@@ -4,7 +4,7 @@ var observ = require('observ')
 var _ = {
     orderBy: require('lodash.orderby'),
     findIndex: require('@f/find-index'),
-    findLastIndex: require('lodash.findlastindex'),
+    // findLastIndex: require('lodash.findlastindex'),
     sortedIndexBy: require('lodash.sortedindexby'),
     sortedLastIndexBy: require('lodash.sortedlastindexby')
 }
@@ -81,21 +81,23 @@ var sortedCollectionFns = {
     // do a shallow merge of one element
     edit: function (state, item) {
         var self = this
-        var find = state.order() === 'asc' ? _.findIndex : _.findLastIndex
-        var i = find(state().sorted, function (_item) {
+        var i = _.findIndex(state().sorted, function (_item) {
             return _item[self._indexBy] === item[self._indexBy]
         })
 
-        var reSort = !!item[state().sortBy]
-
-        var oldItem = state().indexed[item[self._indexBy]]
+        var oldItem = state.indexed()[item[this._indexBy]]
         var newItem = xtend(oldItem, item)
+        var reSort = this._predicate(item) !== this._predicate(oldItem)
+
         var newIndexedState = {}
         newIndexedState[newItem[self._indexBy]] = newItem
 
         var arr = state().sorted
-        var _newList = arr.slice(0,i).concat([newItem])
-            .concat(arr.slice(i + 1, arr.length))
+        var _newList = ([]).concat(state.sorted())
+        _newList[i] = newItem
+        // _newList = newItem
+        // var _newList = arr.slice(0,i).concat([newItem])
+        //     .concat(arr.slice(i + 1, arr.length))
 
         var newList = reSort ?
             _.orderBy(_newList, self._predicate, state().order) :
