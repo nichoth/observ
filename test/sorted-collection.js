@@ -70,6 +70,8 @@ test('.sortBy', function (t) {
     ], 'should re-sort collection')
 
     t.equal(state.sortBy(), 'foo')
+
+
 })
 
 test('.orderBy', function (t) {

@@ -4,7 +4,9 @@ var observ = require('observ')
 var _ = {
     orderBy: require('lodash.orderby'),
     findIndex: require('@f/find-index'),
-    sortedIndexBy: require('lodash.sortedindexby')
+    findLastIndex: require('lodash.findlastindex'),
+    sortedIndexBy: require('lodash.sortedindexby'),
+    sortedLastIndexBy: require('lodash.sortedlastindexby')
 }
 
 // indexBy
@@ -79,7 +81,8 @@ var sortedCollectionFns = {
     // do a shallow merge of one element
     edit: function (state, item) {
         var self = this
-        var i = _.findIndex(state().sorted, function (_item) {
+        var find = state.order() === 'asc' ? _.findIndex : _.findLastIndex
+        var i = find(state().sorted, function (_item) {
             return _item[self._indexBy] === item[self._indexBy]
         })
 
@@ -107,7 +110,10 @@ var sortedCollectionFns = {
     },
 
     add: function (state, item) {
-        var i = _.sortedIndexBy(state().sorted, item, state().sortBy)
+        var findIndex = state.order() === 'asc' ?
+            _.sortedIndexBy :
+            _.sortedLastIndexBy
+        var i = findIndex(state().sorted, item, this._predicate)
         var newList = state().sorted.slice(0, i).concat([item])
             .concat(state().sorted.slice(i, state().sorted.length))
 

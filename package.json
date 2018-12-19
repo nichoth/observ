@@ -13,8 +13,10 @@
   },
   "dependencies": {
     "@f/find-index": "^1.0.0",
+    "lodash.findlastindex": "^4.6.0",
     "lodash.orderby": "^4.6.0",
     "lodash.sortedindexby": "^4.6.0",
+    "lodash.sortedlastindexby": "^4.6.0",
     "observ": "^0.2.0",
     "observ-struct": "^6.0.0",
     "xtend": "^4.0.1"
