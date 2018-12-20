@@ -3,10 +3,9 @@ var struct = require('observ-struct')
 var observ = require('observ')
 var _ = {
     orderBy: require('lodash.orderby'),
-    findIndex: require('@f/find-index'),
-    sortedIndexBy: require('lodash.sortedindexby'),
-    sortedLastIndexBy: require('lodash.sortedlastindexby')
+    findIndex: require('@f/find-index')
 }
+
 
 // indexBy
 // sortBy
@@ -111,12 +110,10 @@ var sortedCollectionFns = {
     },
 
     add: function (state, item) {
-        var findIndex = state.order() === 'asc' ?
-            _.sortedIndexBy :
-            _.sortedLastIndexBy
-        var i = findIndex(state().sorted, item, this._predicate)
-        var newList = state().sorted.slice(0, i).concat([item])
-            .concat(state().sorted.slice(i, state().sorted.length))
+        var newList = ([]).concat(state.sorted())
+        var compareFn = createCompareFn(this._predicate,
+            state.order() === 'desc')
+        _addSorted(newList, item, compareFn)
 
         var newData = {}
         newData[item[this._indexBy]] = item
@@ -150,4 +147,30 @@ var sortedCollectionFns = {
 }
 
 module.exports = createSortedCollection
+
+function defaultCmp (a, b) {
+    if (a === b) return 0
+    return a < b ? -1 : 1
+}
+
+function createCompareFn (predicate, isDesc) {
+    return function (a, b) {
+        return isDesc ?
+            defaultCmp(predicate(b), predicate(a)) :
+            defaultCmp(predicate(a), predicate(b))
+    }
+}
+
+function _addSorted (list, value, cmp) {
+    if (!cmp) cmp = defaultCmp
+
+    var top = list.push(value) - 1
+
+    while (top) {
+        if (cmp(list[top - 1], value) < 0) return
+        list[top] = list[top - 1]
+        list[top - 1] = value
+        top--
+    }
+}
 
