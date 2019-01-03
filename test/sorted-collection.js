@@ -5,10 +5,11 @@ var MyCollection = createSortedCollection({
     sortBy: 'hello',
     indexBy: 'id'
 })
-var state
+
+// return initial state, an instance of `observ-struct`
+var state = MyCollection()
 
 test('create state', function (t) {
-    state = MyCollection()
     t.deepEqual(state(), {
         order: 'asc',
         sortBy: 'hello',
@@ -18,6 +19,7 @@ test('create state', function (t) {
     t.end()
 })
 
+// here the name of the sort function is used when serializing state
 test('pass in a function to sort things', function (t) {
     t.plan(2)
     var Foos = createSortedCollection({
@@ -45,6 +47,7 @@ test('pass in a function to sort things', function (t) {
     ], 'should use the predicate to sort things')
 })
 
+// change how items are sorted
 test('.sortBy', function (t) {
     t.plan(2)
 
@@ -70,10 +73,9 @@ test('.sortBy', function (t) {
     ], 'should re-sort collection')
 
     t.equal(state.sortBy(), 'foo')
-
-
 })
 
+// change ascending or descending
 test('.orderBy', function (t) {
     t.plan(2)
 
@@ -100,6 +102,8 @@ test('.orderBy', function (t) {
     t.equal(state.order(), 'desc')
 })
 
+// set the collection of items. The method name `get` is confusing. It's an
+// artifact from the api call to a /get endpoint
 test('.get', function (t) {
     MyCollection.get(state, [
         { hello: 'b', id: 2 },
@@ -121,6 +125,7 @@ test('.get', function (t) {
     t.end()
 })
 
+// pass in the `order` option
 test('sort descending', function (t) {
     var MyCollection = createSortedCollection({
         order: 'desc',
@@ -150,6 +155,7 @@ test('sort descending', function (t) {
     t.end()
 })
 
+// update an existing item
 test('.edit', function (t) {
     MyCollection.edit(state, { id: 1, hello: 'world' })
 
@@ -169,6 +175,7 @@ test('.edit', function (t) {
     t.end()
 })
 
+// add an element in the correct sort position
 test('.add', function (t) {
     MyCollection.add(state, { id: 3, hello: 'foo' })
 
