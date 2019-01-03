@@ -1,26 +1,17 @@
 # observ
-Several building blocks for creating observable application state. This builds off of [observ](https://www.npmjs.com/package/observ) and [observ-struct](https://www.npmjs.com/package/observ-struct), and exposes some additional tools.
+Several building blocks for creating observable application state. This builds off of [observ](https://www.npmjs.com/package/observ) and [observ-struct](https://www.npmjs.com/package/observ-struct), and exposes some additional tools. All state changes should be 'immutable', meaning operations emit new objects instead of the same instance.
 
------------------------------------
+## install
 
-notes
+    npm install @nichoth/observ
 
-* immutable updates -- operations return/emit new objects
-
------------------------------------
-
-modules
-
+## modules
 * observ -- see [observ](https://www.npmjs.com/package/observ)
 * observ/computed
 * observ-struct -- see [observ-struct](https://www.npmjs.com/package/observ-struct)
 * sorted-collection
 * Model -- compose IO and state changes
 * requests -- model request/reply state (this is used by `model.js`)
-
-## install
-
-    npm install @nichoth/observ
 
 ## examples
 ```js
